@@ -22,54 +22,49 @@ Im2ColPack = namedtuple('Im2ColPack',
                         ['vp', 'vq', 'ba', 'bc', 'unroll'])
 
 _WORKLOADS = [
-    # workloads of resnet18 on imagenet
-    Workload('float32', 'float32', 224, 224, 3, 64, 7, 7, 3, 3, 2, 2),
-    Workload('float32', 'float32', 56, 56, 64, 64, 3, 3, 1, 1, 1, 1),
-    Workload('float32', 'float32', 56, 56, 64, 64, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 56, 56, 64, 128, 3, 3, 1, 1, 2, 2),
-    Workload('float32', 'float32', 56, 56, 64, 128, 1, 1, 0, 0, 2, 2),
-    Workload('float32', 'float32', 28, 28, 128, 128, 3, 3, 1, 1, 1, 1),
-    Workload('float32', 'float32', 28, 28, 128, 256, 3, 3, 1, 1, 2, 2),
-    Workload('float32', 'float32', 28, 28, 128, 256, 1, 1, 0, 0, 2, 2),
-    Workload('float32', 'float32', 14, 14, 256, 256, 3, 3, 1, 1, 1, 1),
-    Workload('float32', 'float32', 14, 14, 256, 512, 3, 3, 1, 1, 2, 2),
-    Workload('float32', 'float32', 14, 14, 256, 512, 1, 1, 0, 0, 2, 2),
-    Workload('float32', 'float32', 7, 7, 512, 512, 3, 3, 1, 1, 1, 1),
-    # workloads of mobile net on imagenet
+    # workloads of pelee net on mmr
+    # stem 
     Workload('float32', 'float32', 224, 224, 3, 32, 3, 3, 1, 1, 2, 2),
-    Workload('float32', 'float32', 112, 112, 32, 64, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 56, 56, 64, 128, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 112, 112, 32, 16, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 112, 112, 16, 32, 3, 3, 1, 1, 2, 2),
+    Workload('float32', 'float32', 56, 56, 64, 32, 1, 1, 0, 0, 1, 1),
+    # stage_1
+    Workload('float32', 'float32', 56, 56, 32, 16, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 56, 56, 16, 32, 3, 3, 1, 1, 1, 1),
+    Workload('float32', 'float32', 56, 56, 64, 16, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 56, 56, 96, 16, 1, 1, 0, 0, 1, 1),
+    # stage_1_transition
     Workload('float32', 'float32', 56, 56, 128, 128, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 28, 28, 128, 256, 1, 1, 0, 0, 1, 1),
+    # stage_2
+    Workload('float32', 'float32', 28, 28, 128, 32, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 28, 28, 32, 32, 3, 3, 1, 1, 1, 1),
+    Workload('float32', 'float32', 28, 28, 160, 32, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 28, 28, 192, 32, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 28, 28, 224, 32, 1, 1, 0, 0, 1, 1),
+    # stage_2_transition
     Workload('float32', 'float32', 28, 28, 256, 256, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 14, 14, 256, 512, 1, 1, 0, 0, 1, 1),
+    # stage_3
+    Workload('float32', 'float32', 14, 14, 256, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 64, 32, 3, 3, 1, 1, 1, 1),
+    Workload('float32', 'float32', 14, 14, 288, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 320, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 352, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 384, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 416, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 448, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 14, 14, 480, 64, 1, 1, 0, 0, 1, 1),
+    # stage_3_transition
     Workload('float32', 'float32', 14, 14, 512, 512, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 7, 7, 512, 1024, 1, 1, 0, 0, 1, 1),
-    Workload('float32', 'float32', 7, 7, 1024, 1024, 1, 1, 0, 0, 1, 1),
-    # workloads of resnet18 on imagenet (int16->int32 version)
-    Workload('int16', 'int32', 224, 224, 3, 64, 7, 7, 3, 3, 2, 2),
-    Workload('int16', 'int32', 56, 56, 64, 64, 3, 3, 1, 1, 1, 1),
-    Workload('int16', 'int32', 56, 56, 64, 64, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 56, 56, 64, 128, 3, 3, 1, 1, 2, 2),
-    Workload('int16', 'int32', 56, 56, 64, 128, 1, 1, 0, 0, 2, 2),
-    Workload('int16', 'int32', 28, 28, 128, 128, 3, 3, 1, 1, 1, 1),
-    Workload('int16', 'int32', 28, 28, 128, 256, 3, 3, 1, 1, 2, 2),
-    Workload('int16', 'int32', 28, 28, 128, 256, 1, 1, 0, 0, 2, 2),
-    Workload('int16', 'int32', 14, 14, 256, 256, 3, 3, 1, 1, 1, 1),
-    Workload('int16', 'int32', 14, 14, 256, 512, 3, 3, 1, 1, 2, 2),
-    Workload('int16', 'int32', 14, 14, 256, 512, 1, 1, 0, 0, 2, 2),
-    Workload('int16', 'int32', 7, 7, 512, 512, 3, 3, 1, 1, 1, 1),
-    # workloads of mobile net on imagenet (int16->int32 version)
-    Workload('int16', 'int32', 224, 224, 3, 32, 3, 3, 1, 1, 2, 2),
-    Workload('int16', 'int32', 112, 112, 32, 64, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 56, 56, 64, 128, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 56, 56, 128, 128, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 28, 28, 128, 256, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 28, 28, 256, 256, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 14, 14, 256, 512, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 14, 14, 512, 512, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 7, 7, 512, 1024, 1, 1, 0, 0, 1, 1),
-    Workload('int16', 'int32', 7, 7, 1024, 1024, 1, 1, 0, 0, 1, 1),
+    # stage_4
+    Workload('float32', 'float32', 7, 7, 512, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 7, 7, 64, 32, 3, 3, 1, 1, 1, 1),
+    Workload('float32', 'float32', 7, 7, 544, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 7, 7, 576, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 7, 7, 608, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 7, 7, 640, 64, 1, 1, 0, 0, 1, 1),
+    Workload('float32', 'float32', 7, 7, 672, 64, 1, 1, 0, 0, 1, 1),
+    # stage_4_transition
+    Workload('float32', 'float32', 7, 7, 704, 704, 1, 1, 0, 0, 1, 1),
 ]
 
 # platform specific schedule

@@ -75,6 +75,7 @@ set(USE_GRAPH_RUNTIME_DEBUG OFF)
 # - ON: enable llvm with cmake's find search
 # - OFF: disbale llvm
 # - /path/to/llvm-config: enable specific LLVM when multiple llvm-dev is available.
+# set(USE_LLVM /usr/bin/llvm-config-6.0)
 set(USE_LLVM OFF)
 
 #---------------------------------------------

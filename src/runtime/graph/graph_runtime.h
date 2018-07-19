@@ -8,6 +8,8 @@
 #ifndef TVM_RUNTIME_GRAPH_GRAPH_RUNTIME_H_
 #define TVM_RUNTIME_GRAPH_GRAPH_RUNTIME_H_
 
+#include <string.h>
+
 #include <string>
 
 namespace tvm {

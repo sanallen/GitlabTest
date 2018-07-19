@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(tvm C CXX)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 # Utility functions
 include(cmake/util/Util.cmake)
 include(cmake/util/FindCUDA.cmake)
@@ -34,6 +36,8 @@ tvm_option(USE_ROCM "Build with ROCM" OFF)
 tvm_option(ROCM_PATH "The path to rocm" /opt/rocm)
 tvm_option(USE_RPC "Build with RPC" ON)
 tvm_option(USE_LLVM "Build with LLVM, can be set to specific llvm-config path" OFF)
+#set(USE_LLVM /usr/bin/llvm-config-6.0)
+#tvm_option(USE_LLVM "Build with LLVM, can be set to specific llvm-config path" /usr/bin/llvm-config-6.0)
 tvm_option(USE_GRAPH_RUNTIME "Build with tiny graph runtime" ON)
 tvm_option(USE_GRAPH_RUNTIME_DEBUG "Build with tiny graph runtime debug mode" OFF)
 tvm_option(USE_RTTI "Build with RTTI" ON)

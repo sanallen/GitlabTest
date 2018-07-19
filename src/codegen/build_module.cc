@@ -265,9 +265,8 @@ Target metal(const std::vector<std::string>& options) {
 Target rasp(const std::vector<std::string>& options) {
   return CreateTarget("llvm", MergeOptions(options, {
     "-device=rasp",
-    "-mtriple=armv7l-none-linux-gnueabihf",
-    "-mcpu=cortex-a53",
-    "-mattr=+neon"
+    "-mtriple=aarch64-linux-gnu",
+    "-mcpu=cortex-a57"
   }));
 }
 

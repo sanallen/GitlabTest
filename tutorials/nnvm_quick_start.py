@@ -149,7 +149,7 @@ if not use_rasp:
 
 # compile and save model library
 if use_rasp:
-    target = "llvm -target=armv7l-none-linux-gnueabihf -mcpu=cortex-a53 -mattr=+neon"
+    target = "llvm -target=aarch64-linux-gnu -mcpu=cortex-a57"
 else:
     target = "llvm"
 # use `with tvm.target.rasp` for some target-specified optimization

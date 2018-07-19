@@ -12,7 +12,7 @@ from .util import tempdir
 def create_shared(output,
                   objects,
                   options=None,
-                  cc="g++"):
+                  cc="aarch64-linux-gnu-g++"):
     """Create shared library.
 
     Parameters
@@ -37,7 +37,7 @@ def create_shared(output,
         raise ValueError("Unsupported platform")
 
 
-def _linux_shared(output, objects, options, cc="g++"):
+def _linux_shared(output, objects, options, cc="aarch64-linux-gnu-g++"):
     cmd = [cc]
     cmd += ["-shared", "-fPIC"]
     if sys.platform == "darwin":

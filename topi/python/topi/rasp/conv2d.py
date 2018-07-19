@@ -11,57 +11,49 @@ from ..nn.util import infer_pad, infer_stride
 from .. import generic
 
 _SCHEDULES = [
-    # float32 imagenet
-    SpatialPack(1, 8, 4, 1, 4, True),
-    SpatialPack(1, 7, 4, 2, 4, True),
-    SpatialPack(1, 4, 8, 4, 1, True),
-    SpatialPack(1, 4, 4, 1, 16, False),
-    SpatialPack(1, 4, 8, 4, 8, False),
-    SpatialPack(1, 7, 4, 3, 8, True),
-    SpatialPack(1, 2, 8, 1, 8, True),
-    SpatialPack(2, 1, 16, 1, 4, True),
-    SpatialPack(1, 7, 4, 1, 1, True),
-    Im2ColPack(7, 4, 1, 16, True),
-    Im2ColPack(7, 4, 1, 8, False),
-    Im2ColPack(7, 4, 1, 16, False),
-
-    # float32 mobilenet
+    # pelee net
+    # stem 
     SpatialPack(2, 2, 4, 28, 1, True),
     SpatialPack(1, 4, 8, 14, 1, False),
-    SpatialPack(1, 2, 16, 8, 1, True),
+    SpatialPack(1, 4, 4, 1, 4, False),
+    SpatialPack(1, 4, 8, 4, 1, True),
+    # stage_1
+    SpatialPack(1, 4, 4, 4, 1, True),
+    SpatialPack(2, 2, 4, 1, 1, True),
+    SpatialPack(1, 4, 4, 4, 1, True),
+    SpatialPack(1, 4, 4, 4, 1, True),
+    # stage_1_transition
     SpatialPack(1, 4, 8, 8, 8, True),
-    SpatialPack(2, 2, 8, 1, 1, False),
-    SpatialPack(1, 4, 8, 4, 8, False),
-    SpatialPack(2, 2, 8, 1, 4, False),
+    # stage_2
+    SpatialPack(2, 2, 8, 4, 1, True),
+    SpatialPack(2, 2, 4, 1, 1, True),
+    SpatialPack(2, 2, 8, 4, 1, True),
+    SpatialPack(2, 2, 8, 4, 1, True),
+    SpatialPack(2, 2, 8, 4, 1, True),
+    # stage_2_transition
+    SpatialPack(2, 2, 8, 4, 8, False),
+    # stage_3
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 4, 1, 1, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    SpatialPack(2, 2, 8, 4, 4, True),
+    # stage_3_transition
     SpatialPack(2, 2, 8, 1, 8, False),
+    # stage_4
     Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    Im2ColPack(7, 4, 1, 16, False),
+    # stage_4_transition
     Im2ColPack(7, 4, 1, 4, True),
-
-    # int8 imagenet
-    SpatialPack(2, 2, 4, 19, 8, False),
-    SpatialPack(2, 2, 8, 1, 4, True),
-    SpatialPack(2, 2, 8, 7, 4, False),
-    SpatialPack(2, 4, 4, 7, 16, False),
-    SpatialPack(1, 7, 4, 14, 4, True),
-    SpatialPack(2, 2, 8, 5, 1, False),
-    SpatialPack(1, 2, 16, 3, 8, True),
-    SpatialPack(1, 7, 4, 1, 16, True),
-    SpatialPack(2, 2, 8, 2, 16, True),
-    SpatialPack(1, 1, 8, 4, 4, True),
-    SpatialPack(1, 1, 4, 1, 8, False),
-    SpatialPack(1, 1, 8, 1, 16, True),
-
-    # int8 mobilenet
-    SpatialPack(2, 2, 8, 8, 1, True),
-    SpatialPack(1, 7, 4, 16, 4, True),
-    SpatialPack(1, 4, 8, 1, 1, True),
-    SpatialPack(1, 4, 8, 1, 1, True),
-    SpatialPack(1, 4, 8, 4, 8, True),
-    SpatialPack(1, 4, 8, 7, 1, True),
-    SpatialPack(1, 2, 8, 2, 32, True),
-    SpatialPack(1, 2, 16, 2, 16, True),
-    SpatialPack(1, 1, 32, 1, 16, False),
-    SpatialPack(1, 1, 16, 1, 32, True),
 ]
 
 @_get_schedule.register("rasp")
