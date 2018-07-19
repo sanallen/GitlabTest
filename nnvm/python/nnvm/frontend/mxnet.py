@@ -30,7 +30,7 @@ def _warn_not_used(attr, op='nnvm'):
 
 def _parse_tshape(tshape):
     """Parse tshape in string."""
-    return [int(x.strip()) for x in tshape.strip('()').split(',')]
+    return [long(x.strip()) for x in tshape.strip('()').split(',')]
 
 def _parse_bool_str(attr, key, default='False'):
     """Parse bool string to boolean."""

@@ -382,9 +382,8 @@ def rasp(options=None):
         Additional options
     """
     opts = ["-device=rasp",
-            "-mtriple=armv7l-none-linux-gnueabihf",
-            "-mcpu=cortex-a53",
-            "-mattr=+neon"]
+            "-mtriple=aarch64-linux-gnu",
+            "-mcpu=cortex-a57"]
     opts = _merge_opts(opts, options)
     return _api_internal._TargetCreate("llvm", *opts)
 

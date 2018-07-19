@@ -4,7 +4,7 @@ import os
 import ctypes
 
 def test_popcount():
-    target = 'llvm -target=armv7l-none-linux-gnueabihf -mcpu=cortex-a53 -mattr=+neon'
+    target = 'llvm -target=aarch64-linux-gnu -mcpu=cortex-a57'
 
     def check_correct_assembly(type, elements, counts):
         n = tvm.convert(elements)

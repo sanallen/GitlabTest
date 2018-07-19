@@ -112,6 +112,21 @@ class GraphRuntime : public ModuleNode {
     uint32_t eid = this->entry_id(input_nodes_[index], 0);
     TVM_CCALL(TVMArrayCopyFromTo(&data_entry_[eid], data_out, nullptr));
   }
+
+  void GetShape(DLTensor arr, void *shapeData) {
+    int shape[arr.ndim + 1];
+    shape[0] = arr.ndim;
+    for (tvm_index_t i = 1; i < arr.ndim + 1; i++) {
+      shape[i] = arr.shape[i - 1];
+    }
+    memcpy(shapeData, shape, sizeof(shape));
+  }
+
+  void GetInputShapeInfo(int index, DLTensor* data_out) {
+    CHECK_LT(static_cast<size_t>(index), input_nodes_.size());
+    uint32_t eid = this->entry_id(input_nodes_[index], 0);
+    GetShape(data_entry_[eid], data_out->data);
+  }
   /*!
    * \brief Copy index-th output to data_out.
    * \param index The output index.
@@ -121,6 +136,16 @@ class GraphRuntime : public ModuleNode {
     CHECK_LT(static_cast<size_t>(index), outputs_.size());
     uint32_t eid = this->entry_id(outputs_[index]);
     TVM_CCALL(TVMArrayCopyFromTo(&data_entry_[eid], data_out, nullptr));
+  }
+  /*!
+   * \brief Copy index-th shape information to data_out.
+   * \param index The output index.
+   * \param data_out the output shape information data.
+   */
+  void GetOutputShapeInfo(int index, DLTensor* data_out) {
+    CHECK_LT(static_cast<size_t>(index), outputs_.size());
+    uint32_t eid = this->entry_id(outputs_[index]);
+    GetShape(data_entry_[eid], data_out->data);
   }
 #ifdef TVM_GRAPH_RUNTIME_DEBUG
   /*!
@@ -158,6 +183,29 @@ class GraphRuntime : public ModuleNode {
     }
 
     TVM_CCALL(TVMArrayCopyFromTo(&data_entry_[eid], data_out, nullptr));
+  }
+
+  /*!
+   * \brief Copy index-th node to data_out.
+   *
+   * This method will do a partial run of the the graph
+   * from begining upto the index-th node and return output of index-th node.
+   * This is costly operation and suggest to use only for debug porpose.
+   *
+   * \param index: The  index of the node.
+   * \param data_out the node's shape data.
+   */
+
+  void GetDebugShapeInfo(int index, DLTensor* data_out) {
+    CHECK_LT(static_cast<size_t>(index), nodes_.size());
+    uint32_t eid = index;
+
+    for (size_t i = 0; i < op_execs_.size(); ++i) {
+      if (op_execs_[i]) op_execs_[i]();
+      if (static_cast<int>(i) == index) break;
+    }
+
+    GetShape(data_entry_[eid], data_out->data);
   }
 #endif
   /*!
@@ -602,6 +650,10 @@ PackedFunc GraphRuntime::GetFunction(
     return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
         this->GetOutput(args[0], args[1]);
       });
+  } else if (name == "get_outputShapeInfo") {
+    return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
+        this->GetOutputShapeInfo(args[0], args[1]);
+      });
   } else if (name == "get_input") {
     return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
         if (args[0].type_code() == kStr) {
@@ -612,6 +664,16 @@ PackedFunc GraphRuntime::GetFunction(
           this->GetInput(args[0], args[1]);
         }
       });
+  } else if (name == "get_inputShapeInfo") {
+    return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
+        if (args[0].type_code() == kStr) {
+          int in_idx = this->GetInputIndex(args[0]);
+          CHECK_GE(in_idx, 0);
+          this->GetInputShapeInfo(in_idx, args[1]);
+        } else {
+          this->GetInputShapeInfo(args[0], args[1]);
+        }
+      });
 #ifdef TVM_GRAPH_RUNTIME_DEBUG
   } else if (name == "debug_get_output") {
     return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
@@ -619,6 +681,14 @@ PackedFunc GraphRuntime::GetFunction(
           this->DebugGetNodeOutput(this->GetNodeIndex(args[0]), args[1]);
         } else {
           this->DebugGetNodeOutput(args[0], args[1]);
+        }
+    });
+  } else if (name == "get_debugShapeInfo") {
+    return PackedFunc([sptr_to_self, this](TVMArgs args, TVMRetValue* rv) {
+        if (args[0].type_code() == kStr) {
+          this->GetDebugShapeInfo(this->GetNodeIndex(args[0]), args[1]);
+        } else {
+          this->GetDebugShapeInfo(args[0], args[1]);
         }
       });
 #endif
